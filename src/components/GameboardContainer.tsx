@@ -4,6 +4,7 @@ import Player from 'src/business/Player';
 import Gameboard from 'src/components/Gameboard';
 import HumanPlayer from 'src/business/players/HumanPlayer';
 import RandomBotPlayer from 'src/business/players/RandomBotPlayer';
+import Configuration from 'src/types/Configuration';
 
 export interface PlayerDescriptor {
   mode: 'HUMAN' | 'RANDOM_BOT';
@@ -14,12 +15,12 @@ export interface PlayerDescriptor {
 }
 
 export interface GameboardContainerProps {
-  size: Game['size'];
-  blackPlayerDescriptor: PlayerDescriptor;
-  whitePlayerDescriptor: PlayerDescriptor;
+  configuration: Configuration;
 }
 
-const GameboardContainer: FC<GameboardContainerProps> = ({ size, blackPlayerDescriptor, whitePlayerDescriptor }) => {
+const GameboardContainer: FC<GameboardContainerProps> = ({
+  configuration: { size, blackPlayerDescriptor, whitePlayerDescriptor }
+}) => {
   const game = useMemo<Game>(() => new Game(size), [size]);
   const blackPlayer = useMemo<Player>(() => createPlayer(blackPlayerDescriptor), [
     blackPlayerDescriptor.mode,

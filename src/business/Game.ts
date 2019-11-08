@@ -1,5 +1,6 @@
 import PlayerType from 'src/types/PlayerType';
 import RoomPosition from 'src/types/RoomPosition';
+import Configuration from 'src/types/Configuration';
 
 type Room = PlayerType | 'NONE';
 
@@ -10,7 +11,7 @@ export default class Game {
   /** `'FINISHED'`, `'WITHDRAWAL'` or the number of beads on board. */
   status: number | 'FINISHED' | 'WITHDRAWAL';
 
-  constructor(public size: 15 | 19) {
+  constructor(public size: Configuration['size']) {
     this.state = Array.from<any, Room[]>(Array(size), () => Array.from<any, Room>(Array(size), () => 'NONE'));
     this.status = 0;
   }

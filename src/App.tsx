@@ -1,18 +1,22 @@
-import React from 'react';
-import { createUseStyles } from 'react-jss';
+import React, { useState, Fragment } from 'react';
 import GameboardContainer from 'src/components/GameboardContainer';
-
-const useStyles = createUseStyles({});
+import Configuration from 'src/types/Configuration';
+import ConfigurationForm from 'src/components/ConfigurationForm';
 
 const App: React.FC = () => {
-  const styles = useStyles();
+  const [configuration, setConfiguration] = useState<Configuration | null>(null);
 
   return (
-    <GameboardContainer
-      size={15}
-      blackPlayerDescriptor={{ mode: 'RANDOM_BOT', name: 'Computer', randomBot: { delay: 400 } }}
-      whitePlayerDescriptor={{ mode: 'HUMAN', name: 'Hessamoddin' }}
-    />
+    <Fragment>
+      {!configuration && <ConfigurationForm onSubmit={setConfiguration} />}
+      {configuration && (
+        <Fragment>
+          <button onClick={() => setConfiguration(null)}>Start a New Game</button>
+          <hr />
+          <GameboardContainer configuration={configuration} />
+        </Fragment>
+      )}
+    </Fragment>
   );
 };
 
