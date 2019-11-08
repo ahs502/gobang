@@ -30,28 +30,41 @@ export default class Game {
     state[row][column] = playerType;
 
     // Check whether the player wins or not:
-    const won = check(1, 0) || check(0, 1) || check(1, 1) || check(1, -1);
+    const strikeUp = countStrike(-1, 0),
+      strikeUpRight = countStrike(-1, 1),
+      strikeRight = countStrike(0, 1),
+      strikeDownRight = countStrike(1, 1),
+      strikeDown = countStrike(1, 0),
+      strikeDownLeft = countStrike(1, -1),
+      strikeLeft = countStrike(0, -1),
+      strikeUpLeft = countStrike(-1, -1);
+    const won =
+      strikeUp + strikeDown >= 4 ||
+      strikeUpRight + strikeDownLeft >= 4 ||
+      strikeRight + strikeLeft >= 4 ||
+      strikeDownRight + strikeUpLeft >= 4;
 
     // Update the status of the game:
     this.status = won ? 'FINISHED' : status + 1 === size ** 2 ? 'WITHDRAWAL' : status + 1;
 
     return won;
 
-    function check(rowStep: 0 | 1, columnStep: 0 | 1 | -1): boolean {
-      let rowBase = row;
-      let columnBase = column;
-      while (
-        rowBase >= rowStep &&
-        columnBase >= columnStep &&
-        state[(rowBase -= rowStep)][(columnBase -= columnStep)] === playerType
-      ) {}
-      for (let i = 1; i <= 5; ++i) {
-        const rowCheck = rowBase + i * rowStep;
-        const columnCheck = columnBase + i * columnStep;
-        if (rowCheck >= size || columnCheck >= size) return false;
-        if (state[rowCheck][columnCheck] !== playerType) return false;
+    function countStrike(rowStep: 0 | 1 | -1, columnStep: 0 | 1 | -1): number {
+      let count = 0;
+      while (true) {
+        const rowCheck = row + (count + 1) * rowStep;
+        const columnCheck = column + (count + 1) * columnStep;
+        if (
+          rowCheck < 0 ||
+          rowCheck >= size ||
+          columnCheck < 0 ||
+          columnCheck >= size ||
+          state[rowCheck][columnCheck] !== playerType
+        )
+          break;
+        count++;
       }
-      return true;
+      return count;
     }
   }
 }
