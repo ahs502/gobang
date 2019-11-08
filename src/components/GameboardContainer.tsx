@@ -8,6 +8,9 @@ import RandomBotPlayer from 'src/business/players/RandomBotPlayer';
 export interface PlayerDescriptor {
   mode: 'HUMAN' | 'RANDOM_BOT';
   name: string;
+  randomBot?: {
+    delay: number;
+  };
 }
 
 export interface GameboardContainerProps {
@@ -39,9 +42,12 @@ const GameboardContainer: FC<GameboardContainerProps> = ({ size, blackPlayerDesc
     />
   );
 
-  function createPlayer({ mode, name }: PlayerDescriptor): Player {
+  function createPlayer({ mode, name, randomBot }: PlayerDescriptor): Player {
     if (mode === 'HUMAN') return new HumanPlayer(name);
-    if (mode === 'RANDOM_BOT') return new RandomBotPlayer(name);
+    if (mode === 'RANDOM_BOT') {
+      if (!randomBot) throw new Error('Randome bot special configs are not provided.');
+      return new RandomBotPlayer(name, randomBot.delay);
+    }
     throw new Error(`Unsupported player mode: '${mode}'.`);
   }
 };

@@ -6,7 +6,7 @@ import RoomPosition from 'src/types/RoomPosition';
 export default class RandomBotPlayer extends Player {
   readonly actor: Player['actor'];
 
-  constructor(name: string) {
+  constructor(name: string, private delay: number) {
     super(name);
     this.actor = 'BOT';
   }
@@ -20,7 +20,7 @@ export default class RandomBotPlayer extends Player {
           column = Math.floor(game.size * Math.random());
         } while (game.state[row][column] !== 'NONE');
         resolve({ row, column });
-      }, 400);
+      }, this.delay);
     });
   }
 }

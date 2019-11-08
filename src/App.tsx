@@ -10,7 +10,7 @@ const App: React.FC = () => {
   return (
     <GameboardContainer
       size={15}
-      blackPlayerDescriptor={{ mode: 'RANDOM_BOT', name: 'Computer' }}
+      blackPlayerDescriptor={{ mode: 'RANDOM_BOT', name: 'Computer', randomBot: { delay: 400 } }}
       whitePlayerDescriptor={{ mode: 'HUMAN', name: 'Hessamoddin' }}
     />
   );
