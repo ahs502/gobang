@@ -12,7 +12,8 @@ const useStyles = createUseStyles({
     margin: 10,
     padding: 10,
     border: '1px solid black',
-    borderRadius: 5
+    borderRadius: 5,
+    backgroundColor: 'azure'
   },
   info: {
     margin: 10
@@ -22,7 +23,8 @@ const useStyles = createUseStyles({
     margin: '0 10px'
   },
   board: {
-    border: '1px solid lightgrey'
+    border: '1px solid lightgrey',
+    backgroundColor: 'lightyellow'
   },
   room: {
     display: 'inline-block',
