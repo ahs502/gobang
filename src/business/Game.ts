@@ -1,8 +1,7 @@
 import PlayerType from 'src/types/PlayerType';
 import RoomPosition from 'src/types/RoomPosition';
 import Configuration from 'src/types/Configuration';
-
-type Room = PlayerType | 'NONE';
+import Room from 'src/types/Room';
 
 export default class Game {
   /** The state of the beads in all rooms. */
