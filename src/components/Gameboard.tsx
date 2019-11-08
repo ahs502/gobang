@@ -6,11 +6,40 @@ import PlayerType from 'src/types/PlayerType';
 import RoomPosition from 'src/types/RoomPosition';
 
 const useStyles = createUseStyles({
-  root: {},
-  bead: {},
-  info: {},
-  board: {},
-  room: {}
+  root: {
+    display: 'inline-block',
+    userSelect: 'none',
+    margin: 10,
+    padding: 10,
+    border: '1px solid black',
+    borderRadius: 5
+  },
+  info: {
+    margin: 10
+  },
+  bead: {
+    display: 'inline',
+    margin: '0 10px'
+  },
+  board: {
+    border: '1px solid lightgrey'
+  },
+  room: {
+    display: 'inline-block',
+    cursor: 'pointer',
+    margin: 0,
+    padding: 0,
+    fontSize: '28px',
+    lineHeight: '30px',
+    width: 30,
+    border: '1px solid lightgrey',
+    '& > div': {
+      position: 'relative',
+      top: -1,
+      left: 3,
+      width: 20
+    }
+  }
 });
 
 export interface GameboardProps {
@@ -43,17 +72,6 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
 
   return (
     <div className={styles.root}>
-      <div className={styles.board}>
-        {game.state.map((rowRooms, row) => (
-          <div key={row}>
-            {rowRooms.map((room, column) => (
-              <div key={column} className={styles.room} onClick={() => onRoomSelect({ row, column })}>
-                {room === 'BLACK' ? 'X' : room === 'WHITE' ? 'O' : '?'}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
       <div className={styles.info}>
         {game.status === 'FINISHED' ? (
           <Fragment>{otherPlayer.toString()} won!</Fragment>
@@ -61,11 +79,23 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
           <Fragment>No winners.</Fragment>
         ) : (
           <Fragment>
-            Move: {game.status + 1}, Turn:
-            <div className={styles.bead}>{turn === 'BLACK' ? '(X)' : '(O)'}</div>
+            Move: <strong>{game.status + 1}</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp; Turn:
+            <div className={styles.bead}>{turn === 'BLACK' ? '⚫' : '⚪'}</div>
             {player.toString()}
           </Fragment>
         )}
+      </div>
+      <div className={styles.board}>
+        {game.state.map((rowRooms, row) => (
+          <div key={row}>
+            {rowRooms.map((room, column) => (
+              <div key={column} className={styles.room} onClick={() => onRoomSelect({ row, column })}>
+                <div>{room === 'BLACK' ? '⚫' : room === 'WHITE' ? '⚪' : ' '}</div>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
