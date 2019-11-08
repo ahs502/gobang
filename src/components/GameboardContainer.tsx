@@ -4,15 +4,7 @@ import Player from 'src/business/Player';
 import Gameboard from 'src/components/Gameboard';
 import HumanPlayer from 'src/business/players/HumanPlayer';
 import RandomBotPlayer from 'src/business/players/RandomBotPlayer';
-import Configuration from 'src/types/Configuration';
-
-export interface PlayerDescriptor {
-  mode: 'HUMAN' | 'RANDOM_BOT';
-  name: string;
-  randomBot?: {
-    delay: number;
-  };
-}
+import Configuration, { PlayerDescriptor } from 'src/types/Configuration';
 
 export interface GameboardContainerProps {
   configuration: Configuration;

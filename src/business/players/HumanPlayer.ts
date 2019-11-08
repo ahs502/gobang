@@ -3,6 +3,9 @@ import Player from 'src/business/Player';
 import PlayerType from 'src/types/PlayerType';
 import RoomPosition from 'src/types/RoomPosition';
 
+/**
+ * Implements a human player which acts upon user mouse clicks on the rooms.
+ */
 export default class HumanPlayer extends Player {
   readonly actor: Player['actor'];
   private resolve?: (value: RoomPosition) => void;

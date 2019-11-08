@@ -2,6 +2,10 @@ import Game from 'src/business/Game';
 import PlayerType from 'src/types/PlayerType';
 import RoomPosition from 'src/types/RoomPosition';
 
+/**
+ * The abstract class for any kind of Gobang player.
+ * There can be several implementation of this in `src/business/players/` folder.
+ */
 export default abstract class Player {
   constructor(public name: string) {}
 

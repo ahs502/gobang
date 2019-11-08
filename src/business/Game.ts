@@ -3,6 +3,9 @@ import RoomPosition from 'src/types/RoomPosition';
 import Configuration from 'src/types/Configuration';
 import Room from 'src/types/Room';
 
+/**
+ * The state manager of an instance of Gobang game.
+ */
 export default class Game {
   /** The state of the beads in all rooms. */
   state: Room[][];
@@ -11,8 +14,8 @@ export default class Game {
   status: number | 'FINISHED' | 'WITHDRAWAL';
 
   constructor(public size: Configuration['size']) {
-    this.state = Array.from<any, Room[]>(Array(size), () => Array.from<any, Room>(Array(size), () => 'NONE'));
-    this.status = 0;
+    this.state = Array.from<any, Room[]>(Array(size), () => Array.from<any, Room>(Array(size), () => 'NONE')); // Empty board.
+    this.status = 0; // No beads initially.
   }
 
   /**
@@ -27,7 +30,7 @@ export default class Game {
     if (row < 0 || row >= size || column < 0 || column >= size) throw new Error('Out of board.');
     if (state[row][column] !== 'NONE') throw new Error('This room is set before.');
 
-    state[row][column] = playerType;
+    state[row][column] = playerType; // Set a bead in the room.
 
     // Check whether the player wins or not:
     const strikeUp = countStrike(-1, 0),
@@ -39,16 +42,20 @@ export default class Game {
       strikeLeft = countStrike(0, -1),
       strikeUpLeft = countStrike(-1, -1);
     const won =
-      strikeUp + strikeDown >= 4 ||
-      strikeUpRight + strikeDownLeft >= 4 ||
-      strikeRight + strikeLeft >= 4 ||
-      strikeDownRight + strikeUpLeft >= 4;
+        strikeUp + strikeDown >= 4 /* Vertical match */ ||
+        strikeUpRight + strikeDownLeft >= 4 /* Diagonal match */ ||
+        strikeRight + strikeLeft >= 4 /* Horizontal match */ ||
+        strikeDownRight + strikeUpLeft >= 4 /* Diagonal match */;
 
     // Update the status of the game:
     this.status = won ? 'FINISHED' : status + 1 === size ** 2 ? 'WITHDRAWAL' : status + 1;
 
     return won;
 
+    /**
+     * Returns the number of extra rooms with the same kind
+     * of bead in some certain direction from the target room.
+     */
     function countStrike(rowStep: 0 | 1 | -1, columnStep: 0 | 1 | -1): number {
       let count = 0;
       while (true) {

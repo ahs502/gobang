@@ -61,48 +61,63 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
   const [winner, setWinner] = useState<Player | null>(null);
   useEffect(() => {
     if (game.status === 'FINISHED' || game.status === 'WITHDRAWAL') return;
-    (async function play(): Promise<void> {
+    play(); // Now it's the player's turn, play your turn.
+
+    async function play(): Promise<void> {
       await player
         .play(game, turn)
-        .then(roomPosition =>
-          game.set(turn, roomPosition) ? setWinner(player) : setTurn(turn === 'BLACK' ? 'WHITE' : 'BLACK')
-        )
+        .then(roomPosition => {
+          const won = game.set(turn, roomPosition);
+          if (won) {
+            setWinner(player); // We have a winner!
+          } else {
+            setTurn(turn === 'BLACK' ? 'WHITE' : 'BLACK'); // Next player.
+          }
+        })
         .catch(reason => {
           alert(String(reason));
-          return play();
+          return play(); // Same player, try again.
         });
-    })();
+    }
   }, [player]);
 
   const styles = useStyles();
 
+  const header = (
+    <div className={styles.info}>
+      {game.status === 'FINISHED' ? (
+        <Fragment>{`${winner} won!`}</Fragment>
+      ) : game.status === 'WITHDRAWAL' ? (
+        <Fragment>No winners.</Fragment>
+      ) : (
+        <Fragment>
+          Move: <strong>{game.status + 1}</strong>
+          &nbsp;&nbsp;&nbsp;&nbsp; Turn:
+          <div className={styles.bead}>{getMark(turn)}</div>
+          {`${player}`}
+        </Fragment>
+      )}
+    </div>
+  );
+
+  const board = (
+    <div className={styles.board}>
+      {game.state.map((rowRooms, row) => (
+        <div key={row}>
+          {rowRooms.map((room, column) => (
+            <div key={column} className={styles.room} onClick={() => onRoomSelect({ row, column })}>
+              <div>{getMark(room)}</div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div className={styles.root}>
-      <div className={styles.info}>
-        {game.status === 'FINISHED' ? (
-          <Fragment>{`${winner} won!`}</Fragment>
-        ) : game.status === 'WITHDRAWAL' ? (
-          <Fragment>No winners.</Fragment>
-        ) : (
-          <Fragment>
-            Move: <strong>{game.status + 1}</strong>
-            &nbsp;&nbsp;&nbsp;&nbsp; Turn:
-            <div className={styles.bead}>{getMark(turn)}</div>
-            {`${player}`}
-          </Fragment>
-        )}
-      </div>
-      <div className={styles.board}>
-        {game.state.map((rowRooms, row) => (
-          <div key={row}>
-            {rowRooms.map((room, column) => (
-              <div key={column} className={styles.room} onClick={() => onRoomSelect({ row, column })}>
-                <div>{getMark(room)}</div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      {header}
+      {board}
     </div>
   );
 

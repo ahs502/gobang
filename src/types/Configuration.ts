@@ -7,7 +7,7 @@ export interface PlayerDescriptor {
 }
 
 export default interface Configuration {
-  size: 15 | 19;
+  size: 13 | 15 | 19;
   blackPlayerDescriptor: PlayerDescriptor;
   whitePlayerDescriptor: PlayerDescriptor;
 }
