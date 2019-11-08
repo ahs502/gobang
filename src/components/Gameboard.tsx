@@ -54,6 +54,7 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
   const player = turn === 'BLACK' ? blackPlayer : whitePlayer;
   const otherPlayer = turn === 'BLACK' ? whitePlayer : blackPlayer;
   useEffect(() => {
+    if (game.status === 'FINISHED' || game.status === 'WITHDRAWAL') return;
     (async function play(): Promise<void> {
       await player
         .play(game, turn)
