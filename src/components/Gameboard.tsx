@@ -36,6 +36,9 @@ const useStyles = createUseStyles({
     lineHeight: '30px',
     width: 30,
     border: '1px solid lightgrey',
+    '&:hover': {
+      backgroundColor: 'white'
+    },
     '& > div': {
       position: 'relative',
       top: -1,
