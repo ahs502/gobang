@@ -16,7 +16,7 @@ export default class HumanPlayer extends Player {
     return new Promise((resolve, reject) => (this.resolve = resolve));
   }
 
-  reportRoomSelect(selectedRoomPosition: RoomPosition): void {
+  informRoomSelect(selectedRoomPosition: RoomPosition): void {
     const resolve = this.resolve;
     if (!resolve) return;
     delete this.resolve;

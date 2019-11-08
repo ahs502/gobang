@@ -3,13 +3,15 @@ import { createUseStyles } from 'react-jss';
 import HumanPlayer from 'src/business/players/HumanPlayer';
 import Game from 'src/business/Game';
 import Gameboard from 'src/components/Gameboard';
+import RandomBotPlayer from 'src/business/players/RandomBotPlayer';
+import Player from 'src/business/Player';
 
 const useStyles = createUseStyles({});
 
 const App: React.FC = () => {
   const [game, setGame] = useState<Game>(() => new Game(15));
   const [blackPlayer, setBlackPlayer] = useState<HumanPlayer>(() => new HumanPlayer('Hessamoddin'));
-  const [whitePlayer, setWhitePlayer] = useState<HumanPlayer>(() => new HumanPlayer('Amin Shokravi'));
+  const [whitePlayer, setWhitePlayer] = useState<Player>(() => new RandomBotPlayer('Computer'));
 
   const styles = useStyles();
 
@@ -19,8 +21,7 @@ const App: React.FC = () => {
       blackPlayer={blackPlayer}
       whitePlayer={whitePlayer}
       onRoomSelect={selectedRoomPosition => {
-        blackPlayer.reportRoomSelect(selectedRoomPosition);
-        whitePlayer.reportRoomSelect(selectedRoomPosition);
+        blackPlayer.informRoomSelect(selectedRoomPosition);
       }}
     ></Gameboard>
   );
