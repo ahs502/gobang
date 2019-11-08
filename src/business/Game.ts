@@ -1,5 +1,5 @@
-import PlayerType from '../types/PlayerType';
-import RoomPosition from '../types/RoomPosition';
+import PlayerType from 'src/types/PlayerType';
+import RoomPosition from 'src/types/RoomPosition';
 
 type Room = PlayerType | 'NONE';
 

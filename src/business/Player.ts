@@ -1,6 +1,6 @@
-import PlayerType from '../types/PlayerType';
-import Game from './Game';
-import RoomPosition from '../types/RoomPosition';
+import Game from 'src/business/Game';
+import PlayerType from 'src/types/PlayerType';
+import RoomPosition from 'src/types/RoomPosition';
 
 export default abstract class Player {
   constructor(public name: string) {}
