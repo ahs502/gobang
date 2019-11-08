@@ -22,7 +22,7 @@ const ConfigurationForm: FC<ConfigurationFormProps> = ({ onSubmit }) => {
   });
 
   return (
-    <div>
+    <div style={{ margin: '20px' }}>
       <div>
         Size:&nbsp;
         <select
@@ -131,7 +131,6 @@ const ConfigurationForm: FC<ConfigurationFormProps> = ({ onSubmit }) => {
           </Fragment>
         )}
       </div>
-      <br />
       <br />
       <button onClick={() => onSubmit(configuration)}>Start Game</button>
     </div>

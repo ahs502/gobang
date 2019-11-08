@@ -11,8 +11,9 @@ const App: React.FC = () => {
       {!configuration && <ConfigurationForm onSubmit={setConfiguration} />}
       {configuration && (
         <Fragment>
-          <button onClick={() => setConfiguration(null)}>Start a New Game</button>
-          <hr />
+          <div style={{ margin: '20px' }}>
+            <button onClick={() => setConfiguration(null)}>Start a New Game</button>
+          </div>
           <GameboardContainer configuration={configuration} />
         </Fragment>
       )}
