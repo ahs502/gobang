@@ -30,14 +30,14 @@ export default class Game {
     state[row][column] = playerType;
 
     // Check whether the player wins or not:
-    const won = check(1, 0) || check(0, 1) || check(1, 1);
+    const won = check(1, 0) || check(0, 1) || check(1, 1) || check(1, -1);
 
     // Update the status of the game:
     this.status = won ? 'FINISHED' : status + 1 === size ** 2 ? 'WITHDRAWAL' : status + 1;
 
     return won;
 
-    function check(rowStep: 0 | 1, columnStep: 0 | 1): boolean {
+    function check(rowStep: 0 | 1, columnStep: 0 | 1 | -1): boolean {
       let rowBase = row;
       let columnBase = column;
       while (
