@@ -18,6 +18,12 @@ It features: **React _<small>(Hooks)</small>_** | **TypeScript** | **JSS** | **j
 
     $ npm test
 
-#### All different kinds of `Player`s can be implemented within:
+#### Start test with watch:
+
+    $ npm run test-watch
+
+#### All different kinds of `Player`s (e.g. AI powered players) can be implemented within:
 
     ./src/business/players/
+
+All player classes must inherit the `Player` abstract class.
