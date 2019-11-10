@@ -1,5 +1,12 @@
 import React, { FC, useState, Fragment } from 'react';
 import Configuration, { PlayerDescriptor } from 'src/types/Configuration';
+import { createUseStyles } from 'react-jss';
+
+const useStyles = createUseStyles({
+  root: {
+    margin: 20
+  }
+});
 
 export interface ConfigurationFormProps {
   onSubmit(configuration: Configuration): void;
@@ -20,6 +27,8 @@ const ConfigurationForm: FC<ConfigurationFormProps> = ({ onSubmit }) => {
       }
     }
   }));
+
+  const styles = useStyles();
 
   const generalSection = (
     <div>
@@ -138,7 +147,7 @@ const ConfigurationForm: FC<ConfigurationFormProps> = ({ onSubmit }) => {
   );
 
   return (
-    <div style={{ margin: '20px' }}>
+    <div className={styles.root}>
       {generalSection}
       <br />
       {blackPlayerSection}
