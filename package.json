@@ -39,5 +39,10 @@
     "cross-env": "^6.0.3",
     "customize-cra": "^0.8.0",
     "react-app-rewired": "^2.1.5"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "src/(.*)": "<rootDir>/src/$1"
+    }
   }
 }
