@@ -1,8 +1,8 @@
 import React, { useState, Fragment } from 'react';
-import GameboardContainer from 'src/components/GameboardContainer';
-import Configuration from 'src/types/Configuration';
-import ConfigurationForm from 'src/components/ConfigurationForm';
 import { createUseStyles } from 'react-jss';
+import Config from 'src/types/Config';
+import ConfigForm from 'src/components/ConfigForm';
+import BoardContainer from 'src/components/BoardContainer';
 
 const useStyles = createUseStyles({
   resetButtonContainer: {
@@ -11,19 +11,19 @@ const useStyles = createUseStyles({
 });
 
 const App: React.FC = () => {
-  const [configuration, setConfiguration] = useState<Configuration | null>(null);
+  const [config, setConfig] = useState<Config | null>(null);
 
   const styles = useStyles();
 
   return (
     <Fragment>
-      {!configuration && <ConfigurationForm onSubmit={setConfiguration} />}
-      {configuration && (
+      {!config && <ConfigForm onSubmit={setConfig} />}
+      {!!config && (
         <Fragment>
           <div className={styles.resetButtonContainer}>
-            <button onClick={() => setConfiguration(null)}>Start a New Game</button>
+            <button onClick={() => setConfig(null)}>Start a New Game</button>
           </div>
-          <GameboardContainer configuration={configuration} />
+          <BoardContainer config={config} />
         </Fragment>
       )}
     </Fragment>

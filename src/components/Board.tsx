@@ -1,9 +1,9 @@
-import React, { FC, useState, useEffect, Fragment, useMemo } from 'react';
+import React, { FC, useState, useEffect, Fragment } from 'react';
 import { createUseStyles } from 'react-jss';
 import Game from 'src/business/Game';
 import Player from 'src/business/Player';
-import PlayerType from 'src/types/PlayerType';
-import RoomPosition from 'src/types/RoomPosition';
+import Bead from 'src/types/Bead';
+import Position from 'src/types/Position';
 import Room from 'src/types/Room';
 
 const useStyles = createUseStyles({
@@ -16,7 +16,7 @@ const useStyles = createUseStyles({
     borderRadius: 5,
     backgroundColor: 'azure'
   },
-  info: {
+  header: {
     margin: 10
   },
   bead: {
@@ -48,26 +48,31 @@ const useStyles = createUseStyles({
   }
 });
 
-export interface GameboardProps {
+export interface BoardProps {
   game: Game;
   blackPlayer: Player;
   whitePlayer: Player;
-  onRoomSelect(selectedRoomPosition: RoomPosition): void;
+  onClick(position: Position): void;
 }
 
-const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomSelect }) => {
-  const [turn, setTurn] = useState<PlayerType>('BLACK');
-  const player = turn === 'BLACK' ? blackPlayer : whitePlayer;
+const Board: FC<BoardProps> = ({ game, blackPlayer, whitePlayer, onClick }) => {
+  const [turn, setTurn] = useState<Bead>('BLACK');
+  const player = turn === 'BLACK' ? blackPlayer : whitePlayer; // Current player.
+  const bead = turn; // The bead to play next.
+
   const [winner, setWinner] = useState<Player | null>(null);
+
+  // Make the next move happen:
   useEffect(() => {
     if (game.status === 'FINISHED' || game.status === 'WITHDRAWAL') return;
-    play(); // Now it's the player's turn, play your turn.
+
+    play();
 
     async function play(): Promise<void> {
       await player
-        .play(game, turn)
-        .then(roomPosition => {
-          const won = game.set(turn, roomPosition);
+        .play(game, bead)
+        .then(position => {
+          const won = game.set(bead, position);
           if (won) {
             setWinner(player); // We have a winner!
           } else {
@@ -84,16 +89,16 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
   const styles = useStyles();
 
   const header = (
-    <div className={styles.info}>
+    <div className={styles.header}>
       {game.status === 'FINISHED' ? (
-        <Fragment>{`${winner} won!`}</Fragment>
+        <strong>{`${winner} won!`}</strong>
       ) : game.status === 'WITHDRAWAL' ? (
         <Fragment>No winners.</Fragment>
       ) : (
         <Fragment>
           Move: <strong>{game.status + 1}</strong>
           &nbsp;&nbsp;&nbsp;&nbsp; Turn:
-          <div className={styles.bead}>{getMark(turn)}</div>
+          <div className={styles.bead}>{getIcon(turn)}</div>
           {`${player}`}
         </Fragment>
       )}
@@ -105,8 +110,8 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
       {game.state.map((rowRooms, row) => (
         <div key={row}>
           {rowRooms.map((room, column) => (
-            <div key={column} className={styles.room} onClick={() => onRoomSelect({ row, column })}>
-              <div>{getMark(room)}</div>
+            <div key={column} className={styles.room} onClick={() => onClick({ row, column })}>
+              <div>{getIcon(room)}</div>
             </div>
           ))}
         </div>
@@ -121,9 +126,9 @@ const Gameboard: FC<GameboardProps> = ({ game, blackPlayer, whitePlayer, onRoomS
     </div>
   );
 
-  function getMark(room: Room): string {
-    return room === 'BLACK' ? '⚫' : room === 'WHITE' ? '⚪' : ' ';
+  function getIcon(room: Room): string {
+    return room === 'BLACK' ? '⚫' : room === 'WHITE' ? '⚪' : ' ' /* non-breaking space */;
   }
 };
 
-export default Gameboard;
+export default Board;
