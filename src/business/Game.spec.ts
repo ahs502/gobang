@@ -19,7 +19,7 @@ describe('Game class', () => {
       expect(game.status).toBe(1);
     });
 
-    it('should not reset a room', () => {
+    it('should not let a full room to accept another bead', () => {
       const game = new Game(15);
       game.set('WHITE', { row: 5, column: 5 });
       const exception = fetchException(() => game.set('BLACK', { row: 5, column: 5 }));
@@ -32,7 +32,7 @@ describe('Game class', () => {
       ${50} | ${5}
       ${5}  | ${-1}
       ${5}  | ${50}
-    `('should not set out of board, <$row, $column>', ({ row, column }) => {
+    `('should not let the beat to be set out of the board: <$row, $column>', ({ row, column }) => {
       const game = new Game(15);
       const exception = fetchException(() => game.set('BLACK', { row, column }));
       expect(exception).not.toBe(null);
@@ -75,12 +75,23 @@ describe('Game class', () => {
 
       beforeEach(() => {
         game = new Game(15);
+        /*
+          A no winners state:
+            0 1 0 1 0 1 0 1
+            0 1 0 1 0 1 0 1
+            1 0 1 0 1 0 1 0
+            1 0 1 0 1 0 1 0
+            0 1 0 1 0 1 0 1
+            0 1 0 1 0 1 0 1
+            1 0 1 0 1 0 1 0
+            1 0 1 0 1 0 1 0
+        */
         for (let row = 0; row < 15; ++row)
           for (let column = 0; column < 15; ++column) {
             const rowPairIsEven = Math.floor(row / 2) % 2 === 0;
             const columnIsEven = column % 2 === 0;
-            const playerType = rowPairIsEven === columnIsEven ? 'WHITE' : 'BLACK';
-            game.set(playerType, { row, column });
+            const bead = rowPairIsEven === columnIsEven ? 'WHITE' : 'BLACK';
+            game.set(bead, { row, column });
           }
       });
 
@@ -95,6 +106,8 @@ describe('Game class', () => {
     });
   });
 });
+
+///////////////////////////////////////////////////////////////////////////////
 
 function fetchException(operation: () => void): any {
   try {

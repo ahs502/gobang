@@ -1,5 +1,5 @@
-import PlayerType from 'src/types/PlayerType';
+import Bead from 'src/types/Bead';
 
-type Room = PlayerType | 'NONE';
+type Room = Bead | 'NONE';
 
 export default Room;

@@ -1,28 +1,35 @@
-import Game from 'src/business/Game';
 import Player from 'src/business/Player';
-import PlayerType from 'src/types/PlayerType';
-import RoomPosition from 'src/types/RoomPosition';
+import Game from 'src/business/Game';
+import Bead from 'src/types/Bead';
+import Position from 'src/types/Position';
 
 /**
- * Implements a human player which acts upon user mouse clicks on the rooms.
+ * Implements a human player which acts
+ * upon user mouse clicks on the board.
  */
 export default class HumanPlayer extends Player {
-  readonly actor: Player['actor'];
-  private resolve?: (value: RoomPosition) => void;
+  private resolve?: (value: Position) => void;
 
   constructor(name: string) {
     super(name);
-    this.actor = 'HUMAN';
   }
 
-  play(game: Game, as: PlayerType): Promise<RoomPosition> {
+  get bot(): boolean {
+    return false;
+  }
+
+  play(game: Game, as: Bead): Promise<Position> {
     return new Promise((resolve, reject) => (this.resolve = resolve));
   }
 
-  informRoomSelect(selectedRoomPosition: RoomPosition): void {
+  /**
+   * Handles the click event on the board for this player.
+   * @param position The clicked position on the board.
+   */
+  handleBoardClick(position: Position): void {
     const resolve = this.resolve;
     if (!resolve) return;
-    delete this.resolve;
-    resolve(selectedRoomPosition);
+    delete this.resolve; // Only play once on each turn.
+    resolve(position);
   }
 }

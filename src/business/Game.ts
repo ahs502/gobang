@@ -1,36 +1,35 @@
-import PlayerType from 'src/types/PlayerType';
-import RoomPosition from 'src/types/RoomPosition';
-import Configuration from 'src/types/Configuration';
 import Room from 'src/types/Room';
+import Position from 'src/types/Position';
+import Bead from 'src/types/Bead';
 
 /**
  * The state manager of an instance of Gobang game.
  */
 export default class Game {
-  /** The state of the beads in all rooms. */
+  /** The state of all the rooms in the board. */
   state: Room[][];
 
   /** `'FINISHED'`, `'WITHDRAWAL'` or the number of beads on board. */
   status: number | 'FINISHED' | 'WITHDRAWAL';
 
-  constructor(public size: Configuration['size']) {
+  constructor(public size: number) {
     this.state = Array.from<any, Room[]>(Array(size), () => Array.from<any, Room>(Array(size), () => 'NONE')); // Empty board.
     this.status = 0; // No beads initially.
   }
 
   /**
-   * Sets a new bead and returns true iff the player wins.
-   * @param playerType The player type: `'BLACK'` or `'WHITE'`.
+   * Sets a new bead and returns true iff the current player wins.
+   * @param bead The bead type: `'BLACK'` or `'WHITE'`.
    * @param roomPosition The position of the target room.
    */
-  set(playerType: PlayerType, { row, column }: RoomPosition): boolean {
+  set(bead: Bead, { row, column }: Position): boolean {
     const { size, state, status } = this;
 
     if (status === 'FINISHED' || status === 'WITHDRAWAL') throw new Error('The game is already over!');
     if (row < 0 || row >= size || column < 0 || column >= size) throw new Error('Out of board.');
     if (state[row][column] !== 'NONE') throw new Error('This room is set before.');
 
-    state[row][column] = playerType; // Set a bead in the room.
+    state[row][column] = bead; // Set the bead in the room.
 
     // Check whether the player wins or not:
     const strikeUp = countStrike(-1, 0),
@@ -43,7 +42,7 @@ export default class Game {
       strikeUpLeft = countStrike(-1, -1);
     const won =
         strikeUp + strikeDown >= 4 /* Vertical match */ ||
-        strikeUpRight + strikeDownLeft >= 4 /* Diagonal match */ ||
+        strikeUpRight + strikeDownLeft >= 4 /* Reverse diagonal match */ ||
         strikeRight + strikeLeft >= 4 /* Horizontal match */ ||
         strikeDownRight + strikeUpLeft >= 4 /* Diagonal match */;
 
@@ -54,7 +53,7 @@ export default class Game {
 
     /**
      * Returns the number of extra rooms with the same kind
-     * of bead in some certain direction from the target room.
+     * of bead in some certain direction out of the target room.
      */
     function countStrike(rowStep: 0 | 1 | -1, columnStep: 0 | 1 | -1): number {
       let count = 0;
@@ -66,7 +65,7 @@ export default class Game {
           rowCheck >= size ||
           columnCheck < 0 ||
           columnCheck >= size ||
-          state[rowCheck][columnCheck] !== playerType
+          state[rowCheck][columnCheck] !== bead
         )
           break;
         count++;

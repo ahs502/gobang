@@ -1,6 +1,6 @@
 import Game from 'src/business/Game';
-import PlayerType from 'src/types/PlayerType';
-import RoomPosition from 'src/types/RoomPosition';
+import Bead from 'src/types/Bead';
+import Position from 'src/types/Position';
 
 /**
  * The abstract class for any kind of Gobang player.
@@ -9,17 +9,17 @@ import RoomPosition from 'src/types/RoomPosition';
 export default abstract class Player {
   constructor(public name: string) {}
 
-  /** Returns whether this player represents a human activity or a bot? */
-  abstract get actor(): 'HUMAN' | 'BOT';
+  /** Returns whether this player represents a human or a bot? */
+  abstract get bot(): boolean;
 
   toString(): string {
-    return `${this.name}${this.actor === 'BOT' ? ' [BOT]' : ''}`;
+    return `${this.name}${this.bot ? ' [BOT]' : ''}`;
   }
 
   /**
    * Returns a promise to resolve the decided room position for the next move.
    * @param game Which game to play right now?
-   * @param as The role of this player in the specified game.
+   * @param bead The bead which this player is about to set.
    */
-  abstract async play(game: Game, as: PlayerType): Promise<RoomPosition>;
+  abstract async play(game: Game, bead: Bead): Promise<Position>;
 }

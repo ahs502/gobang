@@ -4,7 +4,7 @@ import Game from '../Game';
 describe('RandomBotPlayer class', () => {
   it('should be initialized successfully', () => {
     const player = new RandomBotPlayer('Computer', 10);
-    expect(player.actor).toBe('BOT');
+    expect(player.bot).toBe(true);
     expect(player.toString()).toBe('Computer [BOT]');
   });
 
@@ -17,14 +17,10 @@ describe('RandomBotPlayer class', () => {
       game = new Game(15);
     });
 
-    it('should provide a promise that will be resolved to a random position', async () => {
-      const result = player.play(game, 'BLACK');
-      expect(result).toBeInstanceOf(Promise);
-      const decidedRoomPosition = await result;
-      expect(decidedRoomPosition).toHaveProperty('row');
-      expect(typeof decidedRoomPosition.row).toBe('number');
-      expect(decidedRoomPosition).toHaveProperty('column');
-      expect(typeof decidedRoomPosition.column).toBe('number');
+    it('should provide a promise to be resolved to a random free position', async () => {
+      const { row, column } = await player.play(game, 'BLACK');
+      expect(typeof row).toBe('number');
+      expect(typeof column).toBe('number');
     });
 
     it('should not provide a position outside the board', async () => {
@@ -38,6 +34,17 @@ describe('RandomBotPlayer class', () => {
     });
 
     it('should not provide a position that is set before', async () => {
+      /*
+        A semi-full board without a winner:
+          0 1 0 1 0 1 0 1
+          - - - - - - - -
+          0 1 0 1 0 1 0 1
+          - - - - - - - -
+          0 1 0 1 0 1 0 1
+          - - - - - - - -
+          0 1 0 1 0 1 0 1
+          - - - - - - - -
+      */
       for (let row = 0; row < game.size; row += 2)
         for (let column = 0; column < game.size; ++column) {
           game.set(column % 2 === 0 ? 'BLACK' : 'WHITE', { row, column });
@@ -45,7 +52,7 @@ describe('RandomBotPlayer class', () => {
 
       for (let i = 0; i < 100; ++i) {
         const { row } = await player.play(game, 'WHITE');
-        expect(row % 2).toBe(1);
+        expect(row % 2).toBe(1); // Only in the empty rows.
       }
     });
   });

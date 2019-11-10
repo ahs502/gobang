@@ -1,7 +1,7 @@
 import Player from 'src/business/Player';
 import Game from 'src/business/Game';
-import PlayerType from 'src/types/PlayerType';
-import RoomPosition from 'src/types/RoomPosition';
+import Bead from 'src/types/Bead';
+import Position from 'src/types/Position';
 
 /**
  * Implements a silly and simple bot player which only
@@ -10,14 +10,15 @@ import RoomPosition from 'src/types/RoomPosition';
  * kinds of AI-powered players.
  */
 export default class RandomBotPlayer extends Player {
-  readonly actor: Player['actor'];
-
   constructor(name: string, private delay: number) {
     super(name);
-    this.actor = 'BOT';
   }
 
-  async play(game: Game, as: PlayerType): Promise<RoomPosition> {
+  get bot(): boolean {
+    return true;
+  }
+
+  async play(game: Game, bead: Bead): Promise<Position> {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         let row: number, column: number;
